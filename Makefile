@@ -1,10 +1,10 @@
-PYTHON := python2
+PYTHON := python.exe
 VENV ?= .venv
 
 # autopep8 uses pycodestyle but doesn't automatically find files the same way :-/
 REFORMAT := ensime_shared/ rplugin/
 
-activate := $(VENV)/bin/activate
+activate := $(VENV)/Scripts/activate
 requirements := requirements.txt test-requirements.txt
 deps := $(VENV)/deps-updated
 
@@ -16,17 +16,17 @@ $(activate):
 	virtualenv -p $(PYTHON) $(VENV)
 
 $(deps): $(activate) $(requirements)
-	$(VENV)/bin/pip install --upgrade --requirement requirements.txt
-	$(VENV)/bin/pip install --upgrade --requirement test-requirements.txt
+	$(VENV)/Scripts/pip install --upgrade --requirement requirements.txt
+	$(VENV)/Scripts/pip install --upgrade --requirement test-requirements.txt
 	touch $(deps)
 
 unit: $(deps)
 	@echo "Running ensime-vim unit tests"
-	. $(activate) && py.test
+	$(activate) && py.test
 
 integration: $(deps)
 	@echo "Running ensime-vim lettuce tests"
-	. $(activate) && lettuce $(features)
+	$(activate) && lettuce $(features)
 
 coverage: $(deps)
 	. $(activate) && \
